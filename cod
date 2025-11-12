@@ -1,0 +1,120 @@
+# ============================================================
+# ARA0066 – Paradigmas de Linguagens de Programação em Python
+# Trabalho Avaliativo: Sistema de Biblioteca (POO)
+# Professor: Fausto Feitosa
+# Aluno: Juan Gabriel
+# Matrícula: 202502610131
+# Versão do Python: 3.10+
+# ============================================================
+
+# ===== Classe Base =====
+class Publicacao:
+    def __init__(self, titulo: str, autor: str, ano_publicacao: int):
+        self.titulo = titulo
+        self.autor = autor
+        self.ano_publicacao = ano_publicacao
+
+    def exibir_info(self) -> str:
+        """Retorna as informações básicas da publicação"""
+        return f"Título: {self.titulo} | Autor: {self.autor} | Ano: {self.ano_publicacao}"
+
+
+# ===== Subclasse 1 - Livro =====
+class Livro(Publicacao):
+    def __init__(self, titulo: str, autor: str, ano_publicacao: int, isbn: str):
+        super().__init__(titulo, autor, ano_publicacao)
+        self.isbn = isbn
+
+    def exibir_info(self) -> str:
+        return (f"[LIVRO] Título: {self.titulo} | Autor: {self.autor} | "
+                f"Ano: {self.ano_publicacao} | ISBN: {self.isbn}")
+
+
+# ===== Subclasse 2 - Revista =====
+class Revista(Publicacao):
+    def __init__(self, titulo: str, autor: str, ano_publicacao: int, edicao: int):
+        super().__init__(titulo, autor, ano_publicacao)
+        self.edicao = edicao
+
+    def exibir_info(self) -> str:
+        return (f"[REVISTA] Título: {self.titulo} | Autor: {self.autor} | "
+                f"Ano: {self.ano_publicacao} | Edição: {self.edicao}")
+
+
+# ===== Subclasse 3 - Podcast (exemplo livre) =====
+class Podcast(Publicacao):
+    def __init__(self, titulo: str, autor: str, ano_publicacao: int, duracao_min: int):
+        super().__init__(titulo, autor, ano_publicacao)
+        self.duracao_min = duracao_min
+
+    def exibir_info(self) -> str:
+        return (f"[PODCAST] Título: {self.titulo} | Criador: {self.autor} | "
+                f"Ano: {self.ano_publicacao} | Duração: {self.duracao_min} min")
+
+
+# ===== Classe Biblioteca (agregação) =====
+class Biblioteca:
+    def __init__(self, nome: str):
+        self.nome = nome
+        self.publicacoes = []  # agregação: lista de objetos Publicacao
+
+    def adicionar_publicacao(self, pub: Publicacao):
+        self.publicacoes.append(pub)
+        print(f"✅ Publicação '{pub.titulo}' adicionada à biblioteca '{self.nome}'.")
+
+    def remover_publicacao_por_titulo(self, titulo: str):
+        for pub in self.publicacoes:
+            if pub.titulo.lower() == titulo.lower():
+                self.publicacoes.remove(pub)
+                print(f"❌ Publicação '{titulo}' removida da biblioteca.")
+                return
+        print(f"⚠️ Publicação '{titulo}' não encontrada.")
+
+    def listar_publicacoes(self):
+        print(f"\n📚 Lista de publicações na biblioteca '{self.nome}':")
+        for pub in self.publicacoes:
+            # polimorfismo: cada classe responde ao mesmo método de forma diferente
+            print(pub.exibir_info())
+
+    def buscar_por_autor(self, autor: str):
+        print(f"\n🔎 Buscando publicações do autor '{autor}':")
+        encontrados = [p for p in self.publicacoes if p.autor.lower() == autor.lower()]
+        if not encontrados:
+            print("Nenhuma publicação encontrada.")
+        else:
+            for pub in encontrados:
+                print(pub.exibir_info())
+
+
+# ===== Demonstração do funcionamento =====
+if __name__ == "__main__":
+    # Criação das publicações
+    pub1 = Livro("Python Essencial", "Guido van Rossum", 2020, "978-85-12345-01-2")
+    pub2 = Livro("A Arte da Programação", "Donald Knuth", 2015, "978-85-12345-02-9")
+    pub3 = Revista("Ciência Hoje", "Carlos Silva", 2021, 58)
+    pub4 = Revista("Tech News", "Ana Souza", 2023, 12)
+    pub5 = Podcast("Código Falado", "Rafa Tech", 2022, 45)
+    pub6 = Podcast("Dev Talks", "João Pedro", 2021, 60)
+    pub7 = Livro("Clean Code", "Robert C. Martin", 2008, "978-85-12345-03-6")
+    pub8 = Revista("Games Monthly", "Lucas Lima", 2019, 30)
+    pub9 = Livro("Machine Learning", "Andrew Ng", 2018, "978-85-12345-04-3")
+    pub10 = Podcast("PythonCast", "Maria Gomes", 2023, 50)
+
+    # Criando a biblioteca
+    bib = Biblioteca("Biblioteca Central")
+
+    # Adicionando publicações
+    for p in [pub1, pub2, pub3, pub4, pub5, pub6, pub7, pub8, pub9, pub10]:
+        bib.adicionar_publicacao(p)
+
+    # Listando todas
+    bib.listar_publicacoes()
+
+    # Removendo uma publicação
+    bib.remover_publicacao_por_titulo("Tech News")
+
+    # Listando novamente
+    bib.listar_publicacoes()
+
+    # Busca por autor
+    bib.buscar_por_autor("Rafa Tech")
