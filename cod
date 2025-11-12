@@ -60,24 +60,24 @@ class Biblioteca:
 
     def adicionar_publicacao(self, pub: Publicacao):
         self.publicacoes.append(pub)
-        print(f"✅ Publicação '{pub.titulo}' adicionada à biblioteca '{self.nome}'.")
+        print(f" Publicação '{pub.titulo}' adicionada à biblioteca '{self.nome}'.")
 
     def remover_publicacao_por_titulo(self, titulo: str):
         for pub in self.publicacoes:
             if pub.titulo.lower() == titulo.lower():
                 self.publicacoes.remove(pub)
-                print(f"❌ Publicação '{titulo}' removida da biblioteca.")
+                print(f"Publicação '{titulo}' removida da biblioteca.")
                 return
-        print(f"⚠️ Publicação '{titulo}' não encontrada.")
+        print(f"Publicação '{titulo}' não encontrada.")
 
     def listar_publicacoes(self):
-        print(f"\n📚 Lista de publicações na biblioteca '{self.nome}':")
+        print(f"\n Lista de publicações na biblioteca '{self.nome}':")
         for pub in self.publicacoes:
             # polimorfismo: cada classe responde ao mesmo método de forma diferente
             print(pub.exibir_info())
 
     def buscar_por_autor(self, autor: str):
-        print(f"\n🔎 Buscando publicações do autor '{autor}':")
+        print(f"\n Buscando publicações do autor '{autor}':")
         encontrados = [p for p in self.publicacoes if p.autor.lower() == autor.lower()]
         if not encontrados:
             print("Nenhuma publicação encontrada.")
